@@ -55,7 +55,7 @@ function App() {
 
       console.log("Response:", res.data);
 
-      alert("Upload successful!");
+      // alert("Upload successful!");
 
       // reset form
       setForm({ name: "", address: "", image: null });
