@@ -76,16 +76,17 @@ app.get("/data", async (req, res) => {
 });
 app.delete("/delete/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    console.log("DELETE HIT:", req.params.id);
 
-    const deleted = await Upload.findByIdAndDelete(id);
+    const deleted = await Uploadeddata.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
-      return res.status(404).json({ message: "Data not found" });
+      return res.status(404).json({ message: "Not found" });
     }
 
-    res.json({ message: "Deleted successfully", deleted });
+    res.json({ success: true, deleted });
   } catch (err) {
+    console.log("DELETE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });
