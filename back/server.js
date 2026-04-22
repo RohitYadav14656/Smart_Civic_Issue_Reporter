@@ -66,6 +66,30 @@ app.post("/upload", upload.single("image"), async (req, res) => {
   }
 });
 
+app.get("/data", async (req, res) => {
+  try {
+    const data = await Uploadeddata.find().sort({ createdAt: -1 });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+app.delete("/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await Upload.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    res.json({ message: "Deleted successfully", deleted });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // connect DB
 async function connectDB() {
   try {
