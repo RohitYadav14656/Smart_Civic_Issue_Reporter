@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-
+import munciplitydata from "./models/munciplity.js";
 import upload from "./config/multer.js";
 import cloudinary from "./config/cloudinary.js";
 import Uploadeddata from "./models/user.model.js";
@@ -20,6 +20,24 @@ app.get("/", (req, res) => {
   res.send("API running");
 });
 
+app.post('/munciplitysignup',async(req,res)=>{
+  const {username,pincode,password}=req.body;
+  try {
+          // ✅ SAVE TO MONGODB
+          const savedDataofmunci = await munciplitydata.create({
+            username,
+            pincode,
+            password
+          });
+
+          console.log("SAVED IN DB:", savedDataofmunci);
+
+          res.json(savedDataofmunci);
+        } catch (dbError) {
+          console.log("DB ERROR:", dbError);
+          res.status(500).json({ error: dbError.message });
+        }
+})
 // upload route
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
@@ -30,7 +48,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "Image is required" });
     }
 
-    const { name, address } = req.body;
+    const { name, address , pincode} = req.body;
 
     const stream = cloudinary.uploader.upload_stream(
       { folder: "uploads" },
@@ -45,6 +63,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
           const savedData = await Uploadeddata.create({
             name,
             address,
+            pincode,
             imageUrl: result.secure_url,
           });
 

@@ -4,7 +4,8 @@ const uploadSchema = new mongoose.Schema(
   {
     name: String,
     address: String,
-    imageUrl: String,
+    pincode: Number, 
+    imageUrl: String, 
   },
   { timestamps: true }
 );
